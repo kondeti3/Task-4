@@ -31,3 +31,41 @@ variable "lambda_functions" {
     filename = string
   }))
 }
+
+variable "api_name" {
+  description = "The name of the API"
+  type        = string
+}
+
+variable "usage_plan_description" {
+  description = "Description for the usage plan"
+  type        = string
+}
+variable "resources" {
+  description = "List of API Gateway resources"
+  type = list(object({
+    path_part   = string
+    http_method = string
+    authorization = string
+  }))
+}
+variable "api_key_description" {
+  description = "The description of the API key"
+  type        = string
+}
+variable "api_key_name" {
+  description = "The name of the API key"
+  type        = string
+}
+variable "usage_plan_name" {
+  description = "The name of the usage plan"
+  type        = string
+}
+variable "api_description" {
+  description = "The description of the API"
+  type        = string
+}
+variable "stage_name" {
+  description = "The name of the stage"
+  type        = string
+}
