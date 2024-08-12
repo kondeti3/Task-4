@@ -10,6 +10,8 @@ variable "lambda_functions" {
     handler  = string
     filename = string
     file_name = string
+    http_method = string
+    path        = string
   }))
 }
 

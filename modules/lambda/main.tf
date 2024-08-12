@@ -12,18 +12,15 @@ resource "aws_lambda_function" "lambda" {
       source_code_hash = filebase64sha256("${path.module}/${var.lambda_functions[count.index].filename}")
 }
 
-resource "aws_lambda_permission" "allow_apigateway_get" {
-  statement_id  = "AllowExecutionFromAPIGatewayGet"
+resource "aws_lambda_permission" "allow_apigateway" {
+  for_each = {
+    for idx, lambda in var.lambda_functions : "${lambda.name}-${lambda.http_method}-${lambda.path}" => lambda
+  }
+
+  statement_id  = "AllowExecutionFromAPIGateway-${each.value.name}-${each.value.http_method}-${each.value.path}"
   action        = "lambda:InvokeFunction"
-  function_name = "welcomeLambda" # Or use the correct reference if using variables
+  function_name = each.value.name
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${var.region}:${var.aws_account_id}:${var.api_gateway_rest_api_id}/*/GET/welcome"
+  source_arn    = "arn:aws:execute-api:${var.region}:${var.aws_account_id}:${var.api_gateway_rest_api_id}/*/${each.value.http_method}/${each.value.path}"
 }
 
-resource "aws_lambda_permission" "allow_apigateway_post" {
-  statement_id  = "AllowExecutionFromAPIGatewayPost"
-  action        = "lambda:InvokeFunction"
-  function_name = "greetingLambda" # Or use the correct reference if using variables
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "arn:aws:execute-api:${var.region}:${var.aws_account_id}:${var.api_gateway_rest_api_id}/*/POST/greeting"
-}
