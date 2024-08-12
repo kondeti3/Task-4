@@ -4,7 +4,8 @@ provider "aws" {
 
 module "s3" {
   source      = "./modules/s3"
-  bucket_name = var.s3_bucket_name
+  bucket_name = "var.s3_bucket_name"
+  environment = local.environment
 }
 
 module "secrets_manager" {
@@ -24,24 +25,8 @@ module "lambda" {
   region                  = var.region
   lambda_role_arn  = var.lambda_role_arn
   s3_bucket_name   = module.s3.bucket_name
-  lambda_functions = [
-    {
-      name     = "welcomeLambda"
-      handler  = "welcome_lambda.lambda_handler"
-      filename = "welcomeLambda.zip"
-      file_name = "welcome_lambda"
-      http_method = "GET"
-      path        = "welcome"
-    },
-    {
-      name     = "greetingLambda"
-      handler  = "greeting_lambda.lambda_handler"
-      filename = "greetingLambda.zip"
-      file_name = "greeting_lambda"
-      http_method = "POST"
-      path        = "greeting"
-    }
-  ]
+  lambda_functions = local.lambda_functions
+  environment = local.environment
 }
 
 module "api_gateway" {

@@ -1,4 +1,4 @@
 resource "aws_s3_bucket" "state_bucket" {
-  bucket_prefix = "terraform-state-"
+  bucket = "${var.environment}-terraform-state-bucket-007"
   force_destroy  = true
 }
